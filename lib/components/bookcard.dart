@@ -79,7 +79,7 @@ class _BookCardState extends State<BookCard>
 
   @override
   Widget build(BuildContext context) {
-    Color stroke = MyApp.getTextColor(context);
+    Color stroke = MyApp.getCardBackColor(context);
     Border cardBorder() {
       if (widget.lastCard) {
         return Border(

@@ -11,7 +11,7 @@ class AuthorAvatar extends StatelessWidget {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: MyApp.getTextColor(context),
+          color: MyApp.getCardBackColor(context),
         ),
         padding: EdgeInsets.all(8),
         child: Image.network(url),

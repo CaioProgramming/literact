@@ -11,15 +11,17 @@ class QuotesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      citacao,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-          backgroundColor: MyApp.getCardBackColor(context),
-          color: MyApp.getCardTextColor(context),
-          fontSize: 16,
-          fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.w500),
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: Text(
+        '"$citacao"',
+        textAlign: TextAlign.justify,
+        style: TextStyle(
+            color: MyApp.getTextColor(context),
+            fontSize: 14,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w500),
+      ),
     );
   }
 }

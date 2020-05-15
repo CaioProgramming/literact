@@ -13,7 +13,7 @@ class BookData {
         .collection(kauthorCollection)
         .document(book.authorID);
     document.get().then((document) {
-      return Author.convertMap(document.data, document.documentID);
+      return Author.mapToAuthor(document.data, document.documentID);
     }).catchError((error) {
       print('Error to fetch author $error');
     });

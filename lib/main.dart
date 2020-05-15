@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
     return Theme
         .of(context)
         .textTheme
-        .bodyText1
+        .headline5
         .color;
   }
 
