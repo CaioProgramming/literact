@@ -1,7 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
+const kbookCollection = 'obras';
+const kauthorCollection = 'autores';
 const kAppbarLightTextTheme = TextStyle(
     color: Colors.white,
     fontFamily: 'PlayFair',
@@ -13,7 +16,12 @@ const kAppbarDarkTitleTheme = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w500);
 
-
+const kbottombarIcons = [
+  BottomNavigationBarItem(
+      icon: Icon(AntDesign.home), title: Text('Home')),
+  BottomNavigationBarItem(
+      icon: Icon(AntDesign.book), title: Text('Saved'))
+];
 
 const kdarkAppTextTheme = TextTheme(
   headline6: kAppbarDarkTitleTheme,
