@@ -17,22 +17,15 @@ const kAppbarDarkTitleTheme = TextStyle(
     fontWeight: FontWeight.w500);
 
 const kbottombarIcons = [
-  BottomNavigationBarItem(
-      icon: Icon(AntDesign.home), title: Text('Home')),
-  BottomNavigationBarItem(
-      icon: Icon(AntDesign.book), title: Text('Saved'))
+  BottomNavigationBarItem(icon: Icon(Feather.home), title: Text('Home')),
+  BottomNavigationBarItem(icon: Icon(Feather.feather), title: Text('Authors')),
+  BottomNavigationBarItem(icon: Icon(Feather.book), title: Text('Saved')),
 ];
 
 const kdarkAppTextTheme = TextTheme(
   headline6: kAppbarDarkTitleTheme,
-
 );
-const klightAppTextTheme = TextTheme(
-  headline6: kAppbarLightTextTheme
-);
-
-
-
+const klightAppTextTheme = TextTheme(headline6: kAppbarLightTextTheme);
 
 const kDarkAppBar = AppBarTheme(
   brightness: Brightness.light,
@@ -45,7 +38,5 @@ const kLightAppBar = AppBarTheme(
   textTheme: klightAppTextTheme,
 );
 
-const kdarkBottomBar = BottomAppBarTheme(color: Colors.white,elevation: 0);
-const klightBottomBar = BottomAppBarTheme(color: Colors.black,elevation: 0);
-
-
+const kdarkBottomBar = BottomAppBarTheme(color: Colors.white, elevation: 0);
+const klightBottomBar = BottomAppBarTheme(color: Colors.black, elevation: 0);

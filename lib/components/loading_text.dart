@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class LoadTyping extends StatelessWidget {
   final bool repeat;
 
-  LoadTyping({this.repeat = false});
+  LoadTyping({this.repeat = true});
 
   @override
   Widget build(BuildContext context) {

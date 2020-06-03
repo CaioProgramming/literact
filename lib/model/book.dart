@@ -1,13 +1,16 @@
 class Book {
-  String title, downloadUrl, authorID, description;
+  String title, downloadUrl, authorID, description, id;
   List<String> quotes = [];
   List<String> saves = [];
 
-  Book({this.title = "",
-    this.downloadUrl = "",
-    this.authorID = "",
-    this.description = "",
-    this.quotes, this.saves});
+  Book(
+      {this.id = "",
+      this.title = "",
+      this.downloadUrl = "",
+      this.authorID = "",
+      this.description = "",
+      this.quotes,
+      this.saves});
 
   static Book mapToBook(Map<String, dynamic> map, String key) {
     print('converting map\n$map\nto Book');
@@ -20,11 +23,23 @@ class Book {
     final quotes = List<String>.from(maplist);
     final saves = List<String>.from(savelist);
     return Book(
+        id: key,
         quotes: quotes,
         downloadUrl: downloadUrl,
         description: description,
         title: title,
         authorID: authorID,
         saves: saves);
+  }
+
+  Map<String, dynamic> getMap() {
+    return {
+      'titulo': this.title,
+      'autor': this.authorID,
+      'descricao': this.description,
+      'downloadurl': this.downloadUrl,
+      'quotes': this.quotes,
+      'saves': this.saves
+    };
   }
 }

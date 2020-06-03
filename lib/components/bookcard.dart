@@ -1,17 +1,16 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:literact/components/author_stream.dart';
+import 'package:literact/components/author_header.dart';
 import 'package:literact/components/quotes_container.dart';
 import 'package:literact/main.dart';
+import 'package:literact/model/app_data.dart';
 import 'package:literact/model/book.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../constants.dart';
-
-Firestore _firestore = Firestore.instance;
+import '../model/book.dart';
 
 class BookCard extends StatefulWidget {
   final Book book;
@@ -32,16 +31,14 @@ class _BookCardState extends State<BookCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
     _offsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(1.5, 0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticIn,
-    ));
+      end: Offset.zero,
+      begin: const Offset(1.5, 0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _controller.forward();
   }
 
   @override
@@ -54,20 +51,6 @@ class _BookCardState extends State<BookCard>
     print(widget.book.downloadUrl);
   }
 
-  _launchURL() async {
-    String url = widget.book.downloadUrl;
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Stream authorstream() => _firestore
-      .collection(kauthorCollection)
-      .document(widget.book.authorID)
-      .snapshots();
-
   List<Widget> citacoes() {
     List<Widget> citations = [];
     print('${widget.book.quotes.length} citacoes');
@@ -77,8 +60,19 @@ class _BookCardState extends State<BookCard>
     return citations;
   }
 
+  launchURL() async {
+    String url = widget.book.downloadUrl;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var appdata = Provider.of<AppData>(context);
+
     Color stroke = MyApp.getCardBackColor(context);
     Border cardBorder() {
       if (widget.lastCard) {
@@ -98,77 +92,83 @@ class _BookCardState extends State<BookCard>
       }
     }
 
+    Icon saveIcon() {
+      if (widget.book == null) return Icon(FontAwesome5.bookmark);
+
+      return Icon(
+          widget.book.saves.contains(appdata.user.uid)
+              ? FontAwesome5Solid.bookmark
+              : FontAwesome5.bookmark,
+          color: MyApp.getBackColor(context));
+    }
+
     return SlideTransition(
       position: _offsetAnimation,
-      child: Container(
-        decoration: BoxDecoration(
-          border: cardBorder(),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            AuthorStream(
-                authorID: widget.book.authorID, authorstream: authorstream()),
-            Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        FontAwesome5.bookmark,
-                        color: MyApp.getTextColor(context),
-                      ),
+      child: Card(
+        borderOnForeground: true,
+        elevation: 3,
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 4,
+                      right: 4,
                     ),
-                    IconButton(
-                      onPressed: _launchURL,
-                      icon: Icon(
-                        Feather.download,
-                        color: MyApp.getTextColor(context),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 2,
-                    right: 2,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      TypewriterAnimatedTextKit(
-                        speed: Duration(seconds: 3),
-                        isRepeatingAnimation: false,
-                        text: [widget.book.title],
-                        textStyle: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w900),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        width: 300,
-                        height: 10,
-                        child: Divider(
-                          thickness: 1,
-                          color: stroke,
+                    child: Column(
+                      children: <Widget>[
+                        AuthorHeader(
+                            appdata.getCurrentAuthor(widget.book.authorID)),
+                        TypewriterAnimatedTextKit(
+                          speed: Duration(milliseconds: 500),
+                          isRepeatingAnimation: false,
+                          text: [widget.book.title],
+                          textStyle: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.w900),
+                          alignment: AlignmentDirectional.topStart,
                         ),
-                      ),
-                      Text(
-                        widget.book.description,
-                        textAlign: TextAlign.justify,
-                      ),
-                      Center(
-                          child: GridView.count(
-                        crossAxisCount: 2,
-                        children: citacoes(),
-                        shrinkWrap: true,
-                      )),
-                    ],
+                        Text(
+                          widget.book.description,
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500),
+                        ),
+                        Center(
+                            child: ListView(
+                          children: citacoes(),
+                          shrinkWrap: true,
+                        )),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                widget.book.saves.contains('')
+                                    ? FontAwesome5.bookmark
+                                    : FontAwesome5Solid.bookmark,
+                                color: MyApp.getTextColor(context),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                launchURL();
+                              },
+                              icon: Icon(
+                                Feather.download,
+                                color: MyApp.getBackColor(context),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

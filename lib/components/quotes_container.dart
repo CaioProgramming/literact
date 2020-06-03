@@ -15,7 +15,7 @@ class QuotesContainer extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       child: Text(
         '"$citacao"',
-        textAlign: TextAlign.justify,
+        textAlign: TextAlign.center,
         style: TextStyle(
             color: MyApp.getTextColor(context),
             fontSize: 14,

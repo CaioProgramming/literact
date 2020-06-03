@@ -1,34 +1,57 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:literact/components/profile_avatar.dart';
 import 'package:literact/constants.dart';
+import 'package:literact/model/app_data.dart';
+import 'package:literact/screens/authors_screen.dart';
 import 'package:literact/screens/posts_screen.dart';
 import 'package:literact/screens/saved_stories.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'Home';
-  int currentIndex = 0;
-  var screens = [
-    PostScreen(),
-    Stories(),
-  ];
+  FirebaseUser user;
 
-
-
+  HomeScreen(this.user);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  int currentIndex = 0;
+  var screens = [
+    PostScreen(),
+    AuthorsScreen(),
+    Stories(),
+  ];
+  Widget screen() => screens[currentIndex];
 
-  Widget screen() =>widget.screens[widget.currentIndex];
-
-  void selectScreen(int index){
+  void selectScreen(int index) {
     setState(() {
-      widget.currentIndex = index;
+      currentIndex = index;
     });
+  }
+
+  AnimationController _controller;
+  Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      end: Offset.zero,
+      begin: const Offset(1.5, 0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _controller.forward();
   }
 
   @override
@@ -36,36 +59,34 @@ class _HomeScreenState extends State<HomeScreen> {
     final ThemeData mode = Theme.of(context);
     Brightness whichMode = mode.brightness;
 
-    Color backcolor() =>
-        whichMode == Brightness.light ? Colors.black : Colors.white;
-    Color itemcolor() => whichMode == Brightness.light
-        ? Colors.white.withOpacity(0.50)
-        : Colors.black.withOpacity(0.50);
-
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Hero(tag: 'title', child: Text('Litteract')),
-        centerTitle: true,
-        elevation: 0,
-        leading: ProfileAvatar(
-          url: 'https://instagram.fcgh16-1.fna.fbcdn.net/v/t51.2885-19/s320x320/81252612_2482563102025209_5766338480753868800_n.jpg?_nc_ht=instagram.fcgh16-1.fna.fbcdn.net&_nc_ohc=HMzs6GNoIHEAX9bONWB&oh=7cc0370e01969f348508d6919065ed81&oe=5EE790DD',),
-      ),
-      body: SafeArea(
-        child: screen(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: widget.currentIndex,
-        backgroundColor: backcolor(),
-        unselectedItemColor: itemcolor(),
-        selectedItemColor: Theme.of(context).accentColor,
-        elevation: 0,
-        onTap:(index) {
-          selectScreen(index);
-        } ,
-        items: kbottombarIcons,
-      ),
+    return ChangeNotifierProvider(
+      create: (context) => AppData(widget.user),
+      child: Consumer<AppData>(builder: (context, provider, child) {
+        var appData = Provider.of<AppData>(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: AnimatedOpacity(
+              opacity: 1,
+              duration: Duration(milliseconds: 500),
+              child: Text('Litteract'),
+            ),
+          ),
+          body: SafeArea(
+            child: screen(),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: currentIndex,
+            backgroundColor: MyApp.getCardBackColor(context),
+            unselectedItemColor: MyApp.getBackColor(context).withOpacity(0.40),
+            selectedItemColor: Theme.of(context).accentColor,
+            elevation: 0,
+            onTap: (index) {
+              selectScreen(index);
+            },
+            items: kbottombarIcons,
+          ),
+        );
+      }),
     );
   }
 }
-

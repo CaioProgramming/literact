@@ -8,13 +8,21 @@ class AuthorAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: MyApp.getCardBackColor(context),
+    double radius = 20;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CircleAvatar(
+        radius: radius,
+        backgroundColor: MyApp.getBackColor(context),
+        child: CircleAvatar(
+          radius: radius - (radius * 0.10),
+          backgroundColor: MyApp.getTextColor(context),
+          child: CircleAvatar(
+            radius: radius - (radius * 0.20),
+            backgroundColor: MyApp.getTextColor(context),
+            backgroundImage: NetworkImage(url),
+          ),
         ),
-        padding: EdgeInsets.all(8),
-        child: Image.network(url),
       ),
     );
   }

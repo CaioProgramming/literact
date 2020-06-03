@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "988863151784-0v5k0vi6ffbkf1mf2gp5htimdnjekmq1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inlustris.literact",
+            "certificate_hash": "e52ea948ad8eb3370c325822e60b1550052192ac"
+          }
+        },
+        {
           "client_id": "988863151784-frt4m3228gnbih1onoo4lf7ug2jerv38.apps.googleusercontent.com",
           "client_type": 3
         }

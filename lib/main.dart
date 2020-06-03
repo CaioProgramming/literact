@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    getBackColor(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: getBackColor(context), // navigation bar color
-      statusBarColor: getBackColor(context), // status bar color
+      systemNavigationBarColor:
+          getCardBackColor(context), // navigation bar color
+      statusBarColor: getCardBackColor(context), // status bar color
     ));
     return MaterialApp(
       theme: ThemeData(
@@ -39,17 +39,11 @@ class MyApp extends StatelessWidget {
   }
 
   static Color getBackColor(BuildContext context) {
-    return Theme
-        .of(context)
-        .scaffoldBackgroundColor;
+    return Theme.of(context).scaffoldBackgroundColor;
   }
 
   static Color getTextColor(BuildContext context) {
-    return Theme
-        .of(context)
-        .textTheme
-        .headline5
-        .color;
+    return Theme.of(context).textTheme.headline5.color;
   }
 
   static Color getCardBackColor(BuildContext context) {
