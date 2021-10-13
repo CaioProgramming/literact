@@ -4,6 +4,7 @@ class Author {
   Author({this.name, this.picUrl, this.id});
 
   static Author mapToAuthor(Map<String, dynamic> map, String key) {
+    if (map == null) return null;
     print('converting map\n$map\nto Author');
     final String name = map['nome'].toString();
     final String authorpicURL = map['authorpic'].toString();

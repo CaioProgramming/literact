@@ -10,7 +10,7 @@ class AuthorHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        author.name,
+        author != null ? author.name : "Autor não encontrado",
       ),
       leading: AuthorAvatar(url: author.picUrl),
     );

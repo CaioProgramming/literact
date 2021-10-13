@@ -6,6 +6,7 @@ import 'package:literact/components/author_header.dart';
 import 'package:literact/components/quotes_container.dart';
 import 'package:literact/main.dart';
 import 'package:literact/model/app_data.dart';
+import 'package:literact/model/author.dart';
 import 'package:literact/model/book.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -92,6 +93,15 @@ class _BookCardState extends State<BookCard>
       }
     }
 
+    Future<Widget> header(String authorID) async {
+      Author author = await appdata.getCurrentAuthor(authorID);
+      if (author != null) {
+        return AuthorHeader(author);
+      } else {
+        return Text('Autor não encontrado');
+      }
+    }
+
     Icon saveIcon() {
       if (widget.book == null) return Icon(FontAwesome5.bookmark);
 
@@ -119,8 +129,7 @@ class _BookCardState extends State<BookCard>
                     ),
                     child: Column(
                       children: <Widget>[
-                        AuthorHeader(
-                            appdata.getCurrentAuthor(widget.book.authorID)),
+                        AuthorHeader(widget.book.author),
                         TypewriterAnimatedTextKit(
                           speed: Duration(milliseconds: 500),
                           isRepeatingAnimation: false,

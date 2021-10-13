@@ -17,7 +17,7 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Author getCurrentAuthor(String id) {
+  Future<Author> getCurrentAuthor(String id) async {
     _firestore
         .collection(kauthorCollection)
         .document(id)
